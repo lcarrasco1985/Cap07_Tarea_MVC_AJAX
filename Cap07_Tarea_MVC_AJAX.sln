@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34114.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cap07_Tarea_MVC_AJAX.WEB", "Cap07_Tarea_MVC_AJAX.WEB\Cap07_Tarea_MVC_AJAX.WEB.csproj", "{DBC7B1C7-1AB7-4085-882D-0252C1AC75B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cap07_Tarea_MVC_AJAX.CORE", "Cap07_Tarea_MVC_AJAX.CORE\Cap07_Tarea_MVC_AJAX.CORE.csproj", "{DF2ED5EC-EA10-496E-854F-57382C1F4D02}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBC7B1C7-1AB7-4085-882D-0252C1AC75B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC7B1C7-1AB7-4085-882D-0252C1AC75B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC7B1C7-1AB7-4085-882D-0252C1AC75B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC7B1C7-1AB7-4085-882D-0252C1AC75B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF2ED5EC-EA10-496E-854F-57382C1F4D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF2ED5EC-EA10-496E-854F-57382C1F4D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF2ED5EC-EA10-496E-854F-57382C1F4D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF2ED5EC-EA10-496E-854F-57382C1F4D02}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {333286E6-A2FC-4DB1-A4DA-194ED22506A0}
+	EndGlobalSection
+EndGlobal

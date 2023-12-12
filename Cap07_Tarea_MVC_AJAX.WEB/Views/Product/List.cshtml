@@ -1,0 +1,144 @@
+﻿@using Cap07_Tarea_MVC_AJAX.WEB.Models;
+
+@model List<ProductViewModel>
+
+@{
+    ViewBag.Title = "List";
+}
+
+@*Búsqueda de producto por nombre(ProductName)*@
+<div>
+    <label for="txtSearch">Search by Last Name</label>
+    <input type="text" id="txtSearch" />
+    <button id="btnSearch" class="btn btn-primary">Search</button>
+</div>
+
+<table id="tbListadoProducto" class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Product Name</th>
+            <th>Supplier Id</th>
+            <th>UnitPrice</th>
+            <th>Package</th>
+            <th>IsDiscontinued</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.ProductName</td>
+                <td>@item.SupplierId</td>
+                <td>@item.UnitPrice</td>
+                <td>@item.Package</td>
+                <td>@item.IsDiscontinued</td>
+                <td>
+                    <button class="btn btn-success btnEditarProducto" data-idproducto="@item.Id">Editar</button>
+                    <button class="btn btn-danger btnEliminarProducto" data-idproducto="@item.Id">Eliminar</button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+@*Paginación*@
+<div class="pagination">
+    <span class="customer-pagination-info"></span>
+    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+    {
+        <button class="btn btn-primary" onclick="CargarListadoProducto(@i)">@i</button>
+    }
+</div>
+
+@*<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li>
+            <a href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li><a href="#" onclick="CargarListadoProducto(@i)">@i</a></li>
+        }
+        <li>
+            <a href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>*@
+
+<style>
+    div.dataTables_paginate {
+        display: none !important
+    }
+
+    div.dataTables_info {
+        display: none !important
+    }
+</style>
+
+<script>
+
+    $("#btnSearch").click(function () {
+        let searchQuery = $("#txtSearch").val();
+        CargarListadoProducto(1, 10, searchQuery);
+    });
+
+    var totalRows = @ViewBag.TotalRows;
+    loadDatatable();
+
+    function MostrarTextoDescriptivoPaginacion(pageNumber, totalRows) {
+        let start = (pageNumber - 1) * 10 + 1;
+        let end = pageNumber * 10;
+        if (end > totalRows)
+            end = totalRows;
+        $(".customer-pagination-info").text(`Mostrando ${start} a ${end} de ${totalRows} registros`);
+    }
+
+
+    function CargarListadoProducto(pageNumber, pageSize, searchText = "") {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("List", "Product")",
+            cache: false,
+            data: {
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+                searchText: searchText
+            },
+            success: function (listadoProductosHTML) {
+                $("#divListadoProductos").html(listadoProductosHTML);
+
+                //MostrarTextoDescriptivoPaginacion(pageNumber, totalRows)
+
+            }, error: function () {
+                alert("Ocurrió un error al obtener el listado de productos.....");
+            }
+
+        })
+    }
+
+
+    function loadDatatable() {
+        let table = $("#tbListadoProducto").DataTable({
+            dom: 'Bfrtip',
+            buttons: ['copy', 'excel', 'pdf', 'colvis', 'print'],
+            searching: false
+
+        });
+
+        table.buttons().container().insertBefore("#tbListadoProducto_filter");
+
+        /*MostrarTextoDescriptivoPaginacion(1, totalRows)*/
+    }
+
+
+</script>
+

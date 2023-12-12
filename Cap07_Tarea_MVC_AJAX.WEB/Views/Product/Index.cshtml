@@ -1,0 +1,194 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="container">
+
+    <div class="alert alert-success" role="alert">
+        <div class="row">
+            <div class="col-md-2">
+                <button id="btnAgregarProducto" class="btn btn-info">Agregar</button>
+            </div>
+            <div class="col-md-4">
+                <h4>Mantenimiento de Productos</h4>
+            </div>
+        </div>
+    </div>
+
+    <div id="divListadoProductos">
+
+    </div>
+
+    @*Modal*@
+    <div class="modal fade" id="modalRegistroProducto" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mantenimiento de Productos</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Product name</label>
+                                    <input type="text" class="form-control" id="txtProductName" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>SupplierId</label>
+                                    <input type="text" class="form-control" id="txtSupplierId" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>UnitPrice</label>
+                                    <input  type="number" step="0.01" class="form-control" id="txtUnitPrice" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Package</label>
+                                    <input type="text" class="form-control" id="txtPackage" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>IsDiscontinued</label>
+                                    <input type="checkbox" class="form-control" id="txtIsDiscontinued" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarProducto">Guardar</button>
+                    <input type="hidden" value="-1" id="hidIdProducto" />
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+
+<script>
+
+    $("#divListadoProductos").on('click', ".btnEliminarProducto", function () {
+        let vIdProducto = $(this).attr("data-idproducto");
+
+          $.ajax({
+            type: "GET",
+            url: "@Url.Action("Delete", "Product")",
+            cache: false,
+            data: { id: vIdProducto },
+            success: function (success) {
+                console.log("Valor respuesta: " + success)
+                if (success) {
+                    alert("Se eliminó correctamente");
+                    CargarListadoProducto();
+                } else {
+                    alert("Ocurrió un error al elimnar el producto");
+                }
+            },
+            error: function () {
+                alert("Ocurrió un error al elimnar el producto");
+            }
+        });
+
+    });
+
+    $("#divListadoProductos").on('click', ".btnEditarProducto", function () {
+        let vIdProducto = $(this).attr("data-idproducto");
+        let myModal = $("#modalRegistroProducto");
+
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetProduct", "Product" )",
+            cache: false,
+            data: { id: vIdProducto },
+            success: function (objProduct) {
+                console.log("El valor del cliente es: " + JSON.stringify(objProduct))
+                $("#txtProductName").val(objProduct.ProductName);
+                $("#txtSupplierId").val(objProduct.SupplierId);
+                $("#txtUnitPrice").val(objProduct.UnitPrice);
+                $("#txtPackage").val(objProduct.Package);
+                $("#txtIsDiscontinued").val(objProduct.IsDiscontinued);
+                $("#hidIdProducto").val(objProduct.Id);
+                myModal.modal('show');
+            },
+            error: function () {
+                alert("Ocurrió un error al obtener el producto");
+            }
+        });
+
+
+    });
+
+
+    CargarListadoProducto()
+    function CargarListadoProducto() {
+        $.ajax({
+            type: "GET",
+            //url: "Marketing/Customer/List",
+            url : "@Url.Action("List","Product")",
+            cache: false,
+            success: function (listadoProductosHtml)  {
+                $("#divListadoProductos").html(listadoProductosHtml);
+            }, error: function () {
+                alert("Ocurrió un error al obtener el listado de productos....");
+            }
+        });
+    }
+
+    $("#btnAgregarProducto").click(function () {
+        $("#modalRegistroProducto").modal('show');
+    });
+
+    $("#btnGuardarProducto").click(function () {
+        //Obtener los valores de la caja de texto del modal
+        let vProductName = $("#txtProductName").val();
+        let vSupplierId = $("#txtSupplierId").val();
+        let vUnitPrice = $("#txtUnitPrice").val();
+        let vPackage = $("#txtPackage").val();
+        let vIsDiscontinued = $("#txtIsDiscontinued").val();
+        let vIdProducto = $("#hidIdProducto").val();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Save","Product")",
+            cache: false,
+            data: {
+                Id: vIdProducto,
+                ProductName: vProductName,
+                SupplierId: vSupplierId,
+                UnitPrice: vUnitPrice,
+                Package: vPackage,
+                IsDiscontinued: vIsDiscontinued
+            },
+            success: function (response) {
+                if (response) {
+                    alert("Se registró correctamente");
+                    CargarListadoProducto();
+                    $("#modalRegistroProducto").modal('hide');
+                } else {
+                    alert("No se pudo actualizar la información del cliente");
+                }
+            },
+            error: function () {
+                alert("Ocurrió un error en el servidor....");
+            }
+        });
+    });
+
+</script>
